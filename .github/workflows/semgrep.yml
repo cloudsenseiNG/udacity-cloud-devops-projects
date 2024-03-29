@@ -1,5 +1,6 @@
 name: Semgrep
 on: 
+  workflow_dispatch: {}
   pull_request: {}
   push:
     branches:
@@ -24,9 +25,10 @@ jobs:
     env:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
       SEMGREP_REPO_DISPLAY_NAME: monorepo-test--${{ matrix.subdir }}
+      SEMGREP_BASELINE_REF: cloudsenseiNG-patch-1
     container:
       image: returntocorp/semgrep
     steps:
     - uses: actions/checkout@v3
-    - run: semgrep ci --include=${{ matrix.subdir }}
+    - run: SEMGREP_BASELINE_REF="$SEMGREP_BASELINE_REF" semgrep ci --include=${{ matrix.subdir }}
 
