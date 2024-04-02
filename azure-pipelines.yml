@@ -1,9 +1,10 @@
 parameters:
 - name: SEMGREP_APP_TOKEN
   type: string
+  default: 'b6125a4247fdc9a41f35055910a72eb28fa67a682a759e6eadbedcede9163b'
 - name: SEMGREP_REPO_NAME
   type: string
-  default: ''
+  default: 'udacity-cloud-devops-projects'
 - name: excludePatterns
   type: string
   default: '*.webp,*.png,*.svg,*.woff,*.woff2,*.jpg,*.glb,*.pdf,*.lock,*.md,*.pro,.github/*'
