@@ -10,10 +10,10 @@ parameters:
   default: '*.webp,*.png,*.svg,*.woff,*.woff2,*.jpg,*.glb,*.pdf,*.lock,*.md,*.pro,.github/*'
 - name: includePatterns
   type: string
-  default: ''
+  default: '*'
 - name: failOn
-  type: string
-  default: ''
+  type: boolean
+  default: true
 
 
 
