@@ -12,8 +12,8 @@ parameters:
   type: string
   default: '*'
 - name: failOn
-  type: boolean
-  default: true
+  type: string
+  default: 'HIGH'
 
 
 
