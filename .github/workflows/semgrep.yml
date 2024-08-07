@@ -9,8 +9,8 @@ on:
     paths:
     - .github/workflows/semgrep.yml
   schedule:
-    # randoms HH:MM to avoid a load spike on GitHub Actions at 00:00
     - cron: 55 14 * * *
+
 jobs:
   semgrep_include:
     strategy:
@@ -30,6 +30,30 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: semgrep ci --json --output report.json --include=${{ matrix.subdir }} || true
+    - name: Upload report as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: semgrep-report-${{ matrix.subdir }}
+        path: report.json
+
+  combine_reports:
+    needs: semgrep_include
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Download all reports
+      uses: actions/download-artifact@v3
+      with:
+        name: semgrep-report-*
+        path: ./reports
+
+    - name: Combine reports
+      run: |
+        jq -s 'reduce .[] as $item ({}; . + $item)' ./reports/**/*.json > combined_report.json
+    - name: Upload combined report
+      uses: actions/upload-artifact@v3
+      with:
+        name: combined-semgrep-report
+        path: combined_report.json
 
   # semgrep_exclude: 
   #   name: semgrep/ci
