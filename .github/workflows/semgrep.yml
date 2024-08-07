@@ -43,7 +43,7 @@ jobs:
     - name: Download all reports
       uses: actions/download-artifact@v3
       with:
-        name: semgrep-report-*
+        name: semgrep-report-${{ matrix.subdir }}
         path: ./reports
 
     - name: Combine reports
