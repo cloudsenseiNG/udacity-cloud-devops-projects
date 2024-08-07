@@ -17,7 +17,9 @@ jobs:
       matrix:
         subdir:
           - cloud-devops-cloudformation
-          - cloud-devops-static-website  
+          - cloud-devops-static-website 
+          - cloud-devops-operationalizing-ml
+          - cloud-devops-ci-cd-udapeople
     name: semgrep/ci
     runs-on: ubuntu-20.04
     env:
@@ -36,8 +38,6 @@ jobs:
         retention-days: 1
 
   merge-reports:
-    # Merge reports after semgrep_include, even if some jobs have failed
-    if: always()
     needs: [semgrep]
     runs-on: ubuntu-20.04
 
