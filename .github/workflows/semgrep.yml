@@ -107,9 +107,9 @@ jobs:
     - name: Combine reports
       run: jq -s 'reduce .[] as $item ({}; . + $item)' semgrep-report/*.json > combined_report.json
 
-    # - name: Upload combined report
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: combined-semgrep-report
-    #     path: combined_report.json
-    #     retention-days: 14
+    - name: Upload combined report
+      uses: actions/upload-artifact@v3
+      with:
+        name: combined-semgrep-report
+        path: combined_report.json
+        retention-days: 14
