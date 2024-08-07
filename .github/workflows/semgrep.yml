@@ -80,7 +80,7 @@ jobs:
       image: returntocorp/semgrep
     steps:
     - uses: actions/checkout@v4
-    - run: semgrep ci --json --output report.json --include=${{ matrix.subdir }} || true
+    - run: semgrep ci --json --output report-${{ matrix.subdir }}.json --include=${{ matrix.subdir }} || true
     - name: Upload report as artifact
       uses: actions/upload-artifact@v3
       with:
@@ -106,7 +106,7 @@ jobs:
       run: sudo apt-get install -y jq
 
     - name: Combine reports
-      run: jq -s 'reduce .[] as $item ({}; . + $item)' ./reports/**/*.json > combined_report.json
+      run: jq -s 'reduce .[] as $item ({}; . + $item)' ./semgrep-report/**/*.json > combined_report.json
 
     - name: Upload combined report
       uses: actions/upload-artifact@v4
