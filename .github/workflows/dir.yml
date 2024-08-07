@@ -1,0 +1,37 @@
+name: Run Command on Each Folder
+
+on: [push, pull_request]
+
+jobs:
+  run-commands:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Get directories
+      id: get_dirs
+      run: |
+        dirs=$(ls -d */ | grep -v '^\.')
+        echo "::set-output name=dirs::$dirs"
+
+    - name: Run command on each directory
+      run: |
+        IFS=' ' read -r -a array <<< "${{ steps.get_dirs.outputs.dirs }}"
+        for dir in "${array[@]}"
+        do
+          echo "Running command in $dir"
+          (cd $dir && <your_command>) > ../output_${dir%/}.txt
+        done
+
+    - name: Merge outputs
+      run: |
+        cat output_*.txt > merged_output.txt
+        rm output_*.txt
+
+    - name: Upload merged output
+      uses: actions/upload-artifact@v3
+      with:
+        name: merged-output
+        path: merged_output.txt
