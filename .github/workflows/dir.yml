@@ -22,7 +22,7 @@ jobs:
         for dir in "${array[@]}"
         do
           echo "Running command in $dir"
-          (cd $dir && <your_command>) > ../output_${dir%/}.txt
+          cd $dir && pwd > ../output_${dir%/}.txt
         done
 
     - name: Merge outputs
