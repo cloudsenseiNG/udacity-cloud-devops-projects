@@ -104,11 +104,8 @@ jobs:
     - name: Install jq
       run: sudo apt-get install -y jq
 
-    - name: Get Sem Dir
-      run: ls .
-
-    # - name: Combine reports
-    #   run: jq -s 'reduce .[] as $item ({}; . + $item)' semgrep-report/**/*.json > combined_report.json
+    - name: Combine reports
+      run: jq -s 'reduce .[] as $item ({}; . + $item)' semgrep-report/*.json > combined_report.json
 
     # - name: Upload combined report
     #   uses: actions/upload-artifact@v3
