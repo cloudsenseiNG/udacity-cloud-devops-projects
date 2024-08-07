@@ -88,29 +88,29 @@ jobs:
         path: report.json
         retention-days: 1
 
-  # merge-reports:
-  #   # Merge reports after semgrep_include, even if some jobs have failed
-  #   if: always()
-  #   needs: [semgrep]
-  #   runs-on: ubuntu-20.04
+  merge-reports:
+    # Merge reports after semgrep_include, even if some jobs have failed
+    if: always()
+    needs: [semgrep]
+    runs-on: ubuntu-20.04
 
-  #   steps:
-  #   - name: Download all reports
-  #     uses: actions/download-artifact@v3
-  #     with:
-  #       name: semgrep-report-*
-  #       path: ./reports
-  #       merge-multiple: true
+    steps:
+    - name: Download all reports
+      uses: actions/download-artifact@v4
+      with:
+        name: semgrep-report-*
+        path: ./reports
+        merge-multiple: true
 
-  #   - name: Install jq
-  #     run: sudo apt-get install -y jq
+    - name: Install jq
+      run: sudo apt-get install -y jq
 
-  #   - name: Combine reports
-  #     run: jq -s 'reduce .[] as $item ({}; . + $item)' ./reports/**/*.json > combined_report.json
+    - name: Combine reports
+      run: jq -s 'reduce .[] as $item ({}; . + $item)' ./reports/**/*.json > combined_report.json
 
-  #   - name: Upload combined report
-  #     uses: actions/upload-artifact@v3
-  #     with:
-  #       name: combined-semgrep-report
-  #       path: combined_report.json
-  #       retention-days: 14
+    - name: Upload combined report
+      uses: actions/upload-artifact@v4
+      with:
+        name: combined-semgrep-report
+        path: combined_report.json
+        retention-days: 14
