@@ -16,7 +16,6 @@ jobs:
     strategy:
       matrix:
         subdir:
-          - cloud-devops-ci-cd-udapeople
           - cloud-devops-cloudformation
           - cloud-devops-operationalizing-ml
           - cloud-devops-static-website  
@@ -37,6 +36,12 @@ jobs:
         path: report.json
 
   combine_reports:
+    strategy:
+      matrix:
+        subdir:
+          - cloud-devops-cloudformation
+          - cloud-devops-operationalizing-ml
+          - cloud-devops-static-website 
     needs: semgrep_include
     runs-on: ubuntu-20.04
     steps:
