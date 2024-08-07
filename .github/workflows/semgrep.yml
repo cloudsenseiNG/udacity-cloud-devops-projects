@@ -11,106 +11,106 @@ on:
   schedule:
     - cron: 55 14 * * *
 
-jobs:
-  run-tests:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shardIndex: [1, 2, 3, 4]
-        shardTotal: [4]
-
-    steps:
-    - name: Run Playwright tests
-      run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-
-    - name: Upload blob report to GitHub Actions Artifacts
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: blob-report-${{ matrix.shardIndex }}
-        path: blob-report
-        retention-days: 1
-
-  merge-reports:
-    # Merge reports after run-tests, even if some shards have failed
-    if: always()
-    needs: [run-tests]
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    # - uses: actions/setup-node@v4
-    #   with:
-    #     node-version: 18
-    # - name: Install dependencies
-    #   run: npm ci
-
-    - name: Download blob reports from GitHub Actions Artifacts
-      uses: actions/download-artifact@v4
-      with:
-        path: all-blob-reports
-        pattern: blob-report-*
-        merge-multiple: true
-
-    - name: Merge into HTML Report
-      run: npx playwright merge-reports --reporter html ./all-blob-reports 
-
-    - name: Upload HTML report
-      uses: actions/upload-artifact@v4
-      with:
-        name: html-report--attempt-${{ github.run_attempt }}
-        path: playwright-report
-        retention-days: 14    
-
-
 # jobs:
-#   semgrep_include:
+#   run-tests:
+#     runs-on: ubuntu-latest
 #     strategy:
+#       fail-fast: false
 #       matrix:
-#         subdir:
-#           - cloud-devops-cloudformation
-#           - cloud-devops-static-website  
-#     name: semgrep/ci
-#     runs-on: ubuntu-20.04
-#     env:
-#       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-#       SEMGREP_REPO_DISPLAY_NAME: monorepo-test--${{ matrix.subdir }}
-#     container:
-#       image: returntocorp/semgrep
+#         shardIndex: [1, 2, 3, 4]
+#         shardTotal: [4]
+
 #     steps:
-#     - uses: actions/checkout@v3
-#     - run: semgrep ci --json --output report.json --include=${{ matrix.subdir }} || true
-#     - name: Upload report as artifact
-#       uses: actions/upload-artifact@v3
+#     - name: Run Playwright tests
+#       run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+
+#     - name: Upload blob report to GitHub Actions Artifacts
+#       if: always()
+#       uses: actions/upload-artifact@v4
 #       with:
-#         name: semgrep-report-${{ matrix.subdir }}
-#         path: report.json
+#         name: blob-report-${{ matrix.shardIndex }}
+#         path: blob-report
 #         retention-days: 1
 
 #   merge-reports:
-#     # Merge reports after semgrep_include, even if some jobs have failed
+#     # Merge reports after run-tests, even if some shards have failed
 #     if: always()
-#     needs: [semgrep_include]
-#     runs-on: ubuntu-20.04
+#     needs: [run-tests]
+#     runs-on: ubuntu-latest
 
 #     steps:
-#     - name: Download all reports
-#       uses: actions/download-artifact@v3
+#     - uses: actions/checkout@v4
+#     # - uses: actions/setup-node@v4
+#     #   with:
+#     #     node-version: 18
+#     # - name: Install dependencies
+#     #   run: npm ci
+
+#     - name: Download blob reports from GitHub Actions Artifacts
+#       uses: actions/download-artifact@v4
 #       with:
-#         name: semgrep-report-*
-#         path: ./reports
+#         path: all-blob-reports
+#         pattern: blob-report-*
 #         merge-multiple: true
 
-#     - name: Install jq
-#       run: sudo apt-get install -y jq
+#     - name: Merge into HTML Report
+#       run: npx playwright merge-reports --reporter html ./all-blob-reports 
 
-#     - name: Combine reports
-#       run: jq -s 'reduce .[] as $item ({}; . + $item)' ./reports/**/*.json > combined_report.json
-
-#     - name: Upload combined report
-#       uses: actions/upload-artifact@v3
+#     - name: Upload HTML report
+#       uses: actions/upload-artifact@v4
 #       with:
-#         name: combined-semgrep-report
-#         path: combined_report.json
-#         retention-days: 14
+#         name: html-report--attempt-${{ github.run_attempt }}
+#         path: playwright-report
+#         retention-days: 14    
+
+
+jobs:
+  semgrep:
+    strategy:
+      matrix:
+        subdir:
+          - cloud-devops-cloudformation
+          - cloud-devops-static-website  
+    name: semgrep/ci
+    runs-on: ubuntu-20.04
+    env:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+      SEMGREP_REPO_DISPLAY_NAME: monorepo-test--${{ matrix.subdir }}
+    container:
+      image: returntocorp/semgrep
+    steps:
+    - uses: actions/checkout@v4
+    - run: semgrep ci --json --output report.json --include=${{ matrix.subdir }} || true
+    - name: Upload report as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: semgrep-report-${{ matrix.subdir }}
+        path: report.json
+        retention-days: 1
+
+  # merge-reports:
+  #   # Merge reports after semgrep_include, even if some jobs have failed
+  #   if: always()
+  #   needs: [semgrep]
+  #   runs-on: ubuntu-20.04
+
+  #   steps:
+  #   - name: Download all reports
+  #     uses: actions/download-artifact@v3
+  #     with:
+  #       name: semgrep-report-*
+  #       path: ./reports
+  #       merge-multiple: true
+
+  #   - name: Install jq
+  #     run: sudo apt-get install -y jq
+
+  #   - name: Combine reports
+  #     run: jq -s 'reduce .[] as $item ({}; . + $item)' ./reports/**/*.json > combined_report.json
+
+  #   - name: Upload combined report
+  #     uses: actions/upload-artifact@v3
+  #     with:
+  #       name: combined-semgrep-report
+  #       path: combined_report.json
+  #       retention-days: 14
