@@ -100,13 +100,12 @@ jobs:
       with:
         name: semgrep-report
         path: semgrep-report
-        merge-multiple: true
 
     - name: Install jq
       run: sudo apt-get install -y jq
 
     - name: Combine reports
-      run: jq -s 'reduce .[] as $item ({}; . + $item)' ./semgrep-report/**/*.json > combined_report.json
+      run: jq -s 'reduce .[] as $item ({}; . + $item)' semgrep-report/**/*.json > combined_report.json
 
     - name: Upload combined report
       uses: actions/upload-artifact@v3
