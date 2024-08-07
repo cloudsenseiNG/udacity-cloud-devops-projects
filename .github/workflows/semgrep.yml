@@ -52,7 +52,7 @@ jobs:
       run: sudo apt-get install -y jq
 
     - name: Combine reports  # Combine all JSON reports into one
-      run: jq -s 'reduce .[] as $item ({}; . + $item)' semgrep-report/*.json > combined_report.json
+      run: jq -s '.' semgrep-report/*.json > combined_report.json
 
     - name: Upload combined report  # Upload the combined report as an artifact
       uses: actions/upload-artifact@v3
