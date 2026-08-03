@@ -1,6 +1,5 @@
 ## Operationalizing a Machine Learning Program with Docker and Kubernetes
 
-[![CircleCI](https://circleci.com/gh/mayurwaB/cloud-devops-ml-project4.svg?style=svg)](https://circleci.com/gh/mayurwaB/cloud-devops-ml-project4)
 
 ## Project Overview
 

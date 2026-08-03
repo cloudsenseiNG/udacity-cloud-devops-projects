@@ -4,7 +4,7 @@ This project helped in mastering CI/CD concepts. The detailed description can be
 
 ## Project Submission Items
 ### Presentation
-The following [slides](https://github.com/mayurwaB/udacity-cloud-devops-projects/blob/main/cloud-devops-ci-cd-udapeople/instructions/presentation.pdf) explain the key benefits of CI/CD for Cloud-based software products.
+The following [slides](./instructions/presentation.pdf) explain the key benefits of CI/CD for Cloud-based software products.
 
 ### Tools
 - AWS - Cloud Service
@@ -16,7 +16,7 @@ The following [slides](https://github.com/mayurwaB/udacity-cloud-devops-projects
 
 ### Urls
 - Public Url to GitHub repository [URL01]
-  - [GitHub Repo](https://github.com/mayurwaB/udacity-cloud-devops-projects/edit/main/cloud-devops-ci-cd-udapeople/)
+  - [GitHub Repo](./)
 
 - Public URL for the S3 Bucket (the green candidate frontend [URL02]
   - http://udapeople-4befed5.s3-website-us-east-1.amazonaws.com 
